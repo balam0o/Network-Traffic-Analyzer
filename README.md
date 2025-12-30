@@ -21,3 +21,18 @@ python -m src.main capture --out captures/http.pcap --count 200 --timeout 10 --i
 ## Notes (Windows)
 - Install Npcap (WinPcap-compatible mode recommended)
 - Run terminal as Administrator for capture
+
+## Example output
+Protocol statistics:
+UDP: 3246
+TCP: 2344
+OTHER: 324
+
+Top 10 IPs (src+dst):
+192.168.100.38: 1187
+...
+
+Top 10 destination ports:
+UDP/443: 910
+TCP/443: 552
+...
