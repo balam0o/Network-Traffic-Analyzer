@@ -1,15 +1,33 @@
 import argparse
 from .pcap_reader import load_pcap
-from .stats import protocol_stats
 from .capture import capture_to_pcap
+from .stats import protocol_stats, top_ips, top_ports
 
 def run_pcap(pcap_path: str):
     packets = load_pcap(pcap_path)
-    stats = protocol_stats(packets)
+
+    proto = protocol_stats(packets)
+    ips = top_ips(packets, n=10)
+    ports = top_ports(packets, n=10)
 
     print("Protocol statistics:")
-    for proto, count in stats.items():
-        print(f"{proto}: {count}")
+    for k, v in proto.items():
+        print(f"{k}: {v}")
+
+    print("\nTop 10 IPs (src+dst):")
+    if not ips:
+        print("No IP packets found.")
+    else:
+        for ip, count in ips:
+            print(f"{ip}: {count}")
+
+    print("\nTop 10 destination ports:")
+    if not ports:
+        print("No TCP/UDP packets found.")
+    else:
+        for p, count in ports:
+            print(f"{p}: {count}")
+
 
 def run_capture(out: str, count: int, iface: str | None, bpf: str | None, timeout: int | None):
     n = capture_to_pcap(out, count=count, iface=iface, bpf_filter=bpf, timeout=timeout)

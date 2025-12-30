@@ -1,5 +1,6 @@
 from collections import Counter
-from scapy.layers.inet import TCP, UDP, ICMP
+from scapy.layers.inet import TCP, UDP, ICMP, IP
+from scapy.layers.inet6 import IPv6
 
 def protocol_stats(packets):
     counter = Counter()
@@ -15,3 +16,24 @@ def protocol_stats(packets):
             counter["OTHER"] += 1
 
     return counter
+
+def top_ips(packets, n=10): #Ip counting (src & dst) for both IPv4 and IPv6
+    c = Counter()
+    for pkt in packets:
+        if IP in pkt:
+            c[pkt[IP].src] += 1
+            c[pkt[IP].dst] += 1
+        elif IPv6 in pkt:
+            c[pkt[IPv6].src] += 1
+            c[pkt[IPv6].dst] += 1
+    return c.most_common(n)
+
+def top_ports(packets, n=10): #Destination ports counting (more useful for services) 
+                              #separates by protocol to not mix TCP/UDP
+    c = Counter()
+    for pkt in packets:
+        if TCP in pkt:
+            c[f"TCP/{pkt[TCP].dport}"] += 1
+        elif UDP in pkt:
+            c[f"UDP/{pkt[UDP].dport}"] += 1
+    return c.most_common(n)
