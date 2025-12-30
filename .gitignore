@@ -16,3 +16,7 @@ env/
 
 #Logs / misc
 *.log
+
+#Captures
+captures/*.pcap
+*.pcap
