@@ -9,6 +9,7 @@ Analyze PCAP files and capture live traffic to get:
 
 ## Setup
 python -m venv .venv
+
 # Windows:
 .venv\Scripts\activate
 pip install -r requirements.txt
