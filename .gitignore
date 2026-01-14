@@ -1,23 +1,25 @@
-#Python
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
 
-#Virtual env
+# Virtual env
 .venv/
 venv/
 env/
 
-#OS / editor
+# OS / editor
 .DS_Store
 .vscode/
 .idea/
 
-#Logs / misc
+# Logs
 *.log
 
-#Captures
+# Captures
 captures/
 *.pcap
-*.pcap
+*.pcapng
+
+# Reports
+reports/
+*.json

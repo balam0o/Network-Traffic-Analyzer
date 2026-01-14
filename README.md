@@ -36,3 +36,12 @@ Top 10 destination ports:
 UDP/443: 910
 TCP/443: 552
 ...
+
+## Output paths
+Output paths are not created automatically.
+If you want to organize results in folders, create them explicitly:
+
+mkdir captures reports
+
+python -m src.main capture --out captures/live.pcap
+python -m src.main pcap --pcap captures/test.pcap --json reports/report.json
