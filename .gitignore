@@ -18,5 +18,6 @@ env/
 *.log
 
 #Captures
-captures/*.pcap
+captures/
+*.pcap
 *.pcap

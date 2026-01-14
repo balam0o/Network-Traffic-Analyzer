@@ -17,19 +17,34 @@ def protocol_stats(packets):
 
     return counter
 
-def top_ips(packets, n=10): #Ip counting (src & dst) for both IPv4 and IPv6
+def top_src_ips(packets, n=10):
     c = Counter()
     for pkt in packets:
         if IP in pkt:
             c[pkt[IP].src] += 1
-            c[pkt[IP].dst] += 1
         elif IPv6 in pkt:
             c[pkt[IPv6].src] += 1
+    return c.most_common(n)
+
+def top_dst_ips(packets, n=10):
+    c = Counter()
+    for pkt in packets:
+        if IP in pkt:
+            c[pkt[IP].dst] += 1
+        elif IPv6 in pkt:
             c[pkt[IPv6].dst] += 1
     return c.most_common(n)
 
-def top_ports(packets, n=10): #Destination ports counting (more useful for services) 
-                              #separates by protocol to not mix TCP/UDP
+def top_src_ports(packets, n=10):
+    c = Counter()
+    for pkt in packets:
+        if TCP in pkt:
+            c[f"TCP/{pkt[TCP].sport}"] += 1
+        elif UDP in pkt:
+            c[f"UDP/{pkt[UDP].sport}"] += 1
+    return c.most_common(n)
+
+def top_dst_ports(packets, n=10):
     c = Counter()
     for pkt in packets:
         if TCP in pkt:
