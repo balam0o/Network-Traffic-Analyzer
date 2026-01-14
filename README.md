@@ -1,3 +1,5 @@
+![tests](https://github.com/balam0o/Network-Traffic-Analyzer/actions/workflows/tests.yml/badge.svg)
+
 # Network Traffic Analyzer
 
 Analyze PCAP files and capture live traffic to get:
@@ -45,3 +47,6 @@ mkdir captures reports
 
 python -m src.main capture --out captures/live.pcap
 python -m src.main pcap --pcap captures/test.pcap --json reports/report.json
+
+## Testing
+python -m pytest
