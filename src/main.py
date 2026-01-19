@@ -12,6 +12,7 @@ from .stats import (
     tcp_latency_rtt,  
     tcp_loss_stats, 
 )
+from .report import render_html_report  #HTML report generator
 
 def print_counter(title: str, items, top: int):
     print(f"\n{title} (Top {top}):")
@@ -66,7 +67,7 @@ def build_report(packets, top: int):
         "tcp_loss": loss,  
     }
 
-def run_pcap(pcap_path: str, top: int, json_out: str | None):
+def run_pcap(pcap_path: str, top: int, json_out: str | None, html_out: str | None):  # analyze pcap
     packets = load_pcap(pcap_path)
 
     proto = protocol_stats(packets)
@@ -131,11 +132,14 @@ def run_pcap(pcap_path: str, top: int, json_out: str | None):
         with open(json_out, "w", encoding="utf-8") as f:
             json.dump(report, f, indent=2)
         print(f"\nSaved JSON report -> {json_out}")
+    if html_out:  #write HTML report
+        render_html_report(report, html_out)  
+        print(f"Saved HTML report -> {html_out}") 
 
-def run_capture(out: str, count: int, iface: str | None, bpf: str | None, timeout: int | None, top: int, json_out: str | None):
+def run_capture(out: str, count: int, iface: str | None, bpf: str | None, timeout: int | None, top: int, json_out: str | None, html_out: str | None):  # capture and analyze
     n = capture_to_pcap(out, count=count, iface=iface, bpf_filter=bpf, timeout=timeout)
     print(f"Captured {n} packets -> {out}")
-    run_pcap(out, top=top, json_out=json_out)
+    run_pcap(out, top=top, json_out=json_out, html_out=html_out)  
 
 def build_parser():
     parser = argparse.ArgumentParser(description="Network Traffic Analyzer")
@@ -146,6 +150,7 @@ def build_parser():
     pcap_cmd.add_argument("--pcap", required=True, help="Path to pcap file")
     pcap_cmd.add_argument("--top", type=int, default=10, help="Top N entries to show for IPs/ports")
     pcap_cmd.add_argument("--json", default=None, help="Save report to JSON file (e.g. report.json)")
+    pcap_cmd.add_argument("--html", default=None, help="Save report to HTML file (e.g. report.html)")  # HTML output path
 
     #Capture mode
     cap_cmd = sub.add_parser("capture", help="Capture live traffic and analyze it")
@@ -156,6 +161,7 @@ def build_parser():
     cap_cmd.add_argument("--timeout", type=int, default=None, help="Seconds to capture")
     cap_cmd.add_argument("--top", type=int, default=10, help="Top N entries to show for IPs/ports")
     cap_cmd.add_argument("--json", default=None, help="Save report to JSON file (e.g. report.json)")
+    cap_cmd.add_argument("--html", default=None, help="Save report to HTML file (e.g. report.html)")  # HTML output path
 
     return parser
 
@@ -167,9 +173,9 @@ def main():
     args = parser.parse_args()
 
     if args.cmd == "pcap":
-        run_pcap(args.pcap, top=args.top, json_out=args.json)
+        run_pcap(args.pcap, top=args.top, json_out=args.json, html_out=args.html)  # run pcap path
     elif args.cmd == "capture":
-        run_capture(args.out, args.count, args.iface, args.bpf, args.timeout, top=args.top, json_out=args.json)
+        run_capture(args.out, args.count, args.iface, args.bpf, args.timeout, top=args.top, json_out=args.json, html_out=args.html)  # run capture path
 
 
 if __name__ == "__main__":

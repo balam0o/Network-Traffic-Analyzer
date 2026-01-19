@@ -19,10 +19,12 @@ pip install -r requirements.txt
 
 ## Analyze a pcap
 python -m src.main pcap --pcap captures/test.pcap
+python -m src.main pcap --pcap captures/test.pcap --json reports/report.json --html reports/report.html
 
 ## Capture live traffic (may require admin/root)
 python -m src.main capture --out captures/test.pcap --count 200 --timeout 10 --iface "Wi-Fi"
 python -m src.main capture --out captures/http.pcap --count 200 --timeout 10 --iface "Wi-Fi" --bpf "tcp port 80"
+python -m src.main capture --out captures/live.pcap --count 200 --timeout 10 --iface "Wi-Fi" --json reports/report.json --html reports/report.html
 
 ## Notes (Windows)
 - Install Npcap (WinPcap-compatible mode recommended)
@@ -71,6 +73,24 @@ mkdir captures reports
 
 python -m src.main capture --out captures/live.pcap
 python -m src.main pcap --pcap captures/test.pcap --json reports/report.json
+python -m src.main pcap --pcap captures/test.pcap --html reports/report.html
+
+## Visualization
+Generate a simple HTML report with an inline throughput chart:
+python -m src.main pcap --pcap captures/test.pcap --html reports/report.html
+
+## Diagram
+```mermaid
+flowchart LR
+    A[PCAP file] --> B[pcap_reader.py]
+    C[Live capture] --> D[capture.py]
+    D --> A
+    B --> E[stats.py]
+    E --> F[main.py CLI]
+    F --> G[Console]
+    F --> H[JSON report]
+    F --> I[HTML report]
+```
 
 ## Testing
 python -m pytest
