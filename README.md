@@ -6,6 +6,9 @@ Analyze PCAP files and capture live traffic to get:
 - Protocol distribution (TCP/UDP/Other)
 - Top 10 IPs (src+dst)
 - Top 10 destination ports (per protocol)
+- Throughput (bytes/sec, 1s windows)
+- TCP RTT (SYN and data ACK-based)
+- TCP loss estimate (retransmissions)
 
 ## Setup
 python -m venv .venv
@@ -39,6 +42,26 @@ Top 10 destination ports:
 UDP/443: 910
 TCP/443: 552
 ...
+
+Throughput summary (window=1s):
+Buckets: 38
+Avg bps: 108408.16
+Max bps: 453323.00
+
+TCP RTT summary (ms):
+SYN count: 70
+SYN min: 0.255000
+SYN avg: 11.025542857142857
+SYN max: 109.360000
+DATA count: 1308
+DATA min: 0.044000
+DATA avg: 67.68564373088685
+DATA max: 24101.198000
+
+TCP loss estimate:
+Retransmissions: 56
+Total segments: 1613
+Loss rate: 0.0347
 
 ## Output paths
 Output paths are not created automatically.
